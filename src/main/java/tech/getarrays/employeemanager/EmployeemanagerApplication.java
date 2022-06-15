@@ -2,10 +2,18 @@ package tech.getarrays.employeemanager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
+import brave.Span;
+import brave.Tracing;
+import brave.opentracing.BraveTracer;
+import zipkin.reporter.AsyncReporter;
+import zipkin.reporter.okhttp3.OkHttpSender;
 
 import java.util.Arrays;
 
@@ -15,7 +23,28 @@ public class EmployeemanagerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(EmployeemanagerApplication.class, args);
 	}
+	
+	
+	@Bean
+	public RestTemplate restTemplate(RestTemplateBuilder builder) {
+		return builder.
+				build();
+			
+	}
+	
+	/*@Bean
+	public io.opentracing.Tracer zipkinTracer(){
+	    OkHttpSender sender=OkHttpSender.create("http://10.66.13.83:9411/api/v1/spans");
+	   AsyncReporter<zipkin.Span>reporter=AsyncReporter.builder(sender).build();
+	    Tracing tracer=Tracing.newBuilder().localServiceName("zipkin-client-MySpringBoot")
+	            .reporter(reporter).build();
+	    return BraveTracer.create(tracer);
+	}*\
+	
+	
 
+	
+	
 	/*@Bean
 	public CorsFilter corsFilter() {
 		CorsConfiguration corsConfiguration = new CorsConfiguration();
